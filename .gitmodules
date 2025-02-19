@@ -4,11 +4,9 @@
 [submodule "catkin_ws/src/ds_msgs"]
 	path = catkin_ws/src/ds_msgs
 	url = https://github.com/Field-Robotics-Lab/ds_msgs.git
-	branch = nps_dev
 [submodule "catkin_ws/src/ds_sim"]
 	path = catkin_ws/src/ds_sim
 	url = https://github.com/Field-Robotics-Lab/ds_sim.git
-	branch = nps_dev
 [submodule "catkin_ws/src/uuv_manipulators"]
 	path = catkin_ws/src/uuv_manipulators
 	url = https://github.com/Field-Robotics-Lab/uuv_manipulators.git
