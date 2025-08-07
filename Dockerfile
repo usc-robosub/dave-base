@@ -54,10 +54,28 @@ RUN sudo apt-get update \
         ros-${DIST}-xacro \
     && rm -rf /var/lib/apt/lists/*
 
-COPY . /opt/barracuda-simulation
+ENV USERNAME=ros
+ENV USER_UID=1000
+ENV USER_GID=$USER_UID
 
+# Create a non-root user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \ 
+    && mkdir /home/$USERNAME/.config && chown $USER_UID:$USER_GID /home/$USERNAME/.config
+# Set up sudo
+RUN apt-get update \
+&& apt-get install -y sudo \
+&& echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
+&& chmod 0440 /etc/sudoers.d/$USERNAME \
+&& rm -rf /var/lib/apt/lists/*
+
+COPY --chown=$USER_UID:$USER_GID catkin_ws/* /home/ros/catkin_ws/src/uuv
+
+USER ros
 RUN . /opt/ros/noetic/setup.sh \ 
-    && cd /opt/barracuda-simulation/catkin_ws \
+    && cd /home/ros/catkin_ws \
     && catkin build
+USER root
+
 # Set working directory
-WORKDIR /opt
+WORKDIR /home/ros
